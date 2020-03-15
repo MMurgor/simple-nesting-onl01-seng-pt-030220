@@ -39,16 +39,16 @@ describe TypeCoerce do
 
     it 'works with nest T::Array' do
       expect {
-        TypeCoerce[T::Array[T.nilable(Integer)]].new.from(['1', 'invalid', '3'])
+        TypeError[T::Array[T.nilable(Integer)]].new.from(['1', 'invalid', '3'])
       }.to raise_error(TypeCoerce::CoercionError)
       expect(
-        TypeCoerce[T::Array[T::Array[Integer]]].new.from([nil])
+        TypeError[T::Array[T::Array[Integer]]].new.from([nil])
       ).to eql([[]])
       expect(
-        TypeCoerce[T::Array[T::Array[Integer]]].new.from([['1'], ['2'], ['3']]),
+        TypeError[T::Array[T::Array[Integer]]].new.from([['1'], ['2'], ['3']]),
       ).to eql [[1], [2], [3]]
 
-      expect(TypeCoerce[
+      expect(TypeError[
         T::Array[
           T::Array[
             T::Array[User]
@@ -56,7 +56,7 @@ describe TypeCoerce do
         ]
       ].new.from([[[{id: '1'}]]]).flatten.first.id).to eql(1)
 
-      expect(TypeCoerce[
+      expect(TypeError[
         T::Array[
           T::Array[
             T::Array[
@@ -68,7 +68,7 @@ describe TypeCoerce do
         ]
       ].new.from([[[[[{id: 1}]]]]]).flatten.first.id).to eql 1
 
-      expect(TypeCoerce[
+      expect(TypeError[
         T.nilable(T::Array[T.nilable(T::Array[T.nilable(User)])])
       ].new.from([[{id: '1'}]]).flatten.map(&:id)).to eql([1])
     end
