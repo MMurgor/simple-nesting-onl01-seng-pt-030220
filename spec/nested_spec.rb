@@ -1,6 +1,4 @@
-describe "#remove_strawberry" do
-  let :contacts do
-    {
+
       "Jon Snow" => {
         name: "Jon",
         email: "jon_snow@thewall.we",
