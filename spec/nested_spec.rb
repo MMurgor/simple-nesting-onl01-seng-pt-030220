@@ -1,5 +1,5 @@
 
-describe TypeCoerce do
+describe TypeError do
   context 'when given nested types' do
     class User < T::Struct
       const :id, Integer
