@@ -1,76 +1,39 @@
 
-describe TypeError do
-  context 'when given nested types' do
-    class User < t::Struct
-      const :id, Integer
-      const :valid, T.nilable(T::Boolean)
+describe "nested hash" do 
+  describe "#hopper" do 
+    it "operates on the programmer_hash and returns the value of the :grace_hopper key" do
+      expect(hopper).to eq({:known_for => "COBOL", :languages => ["COBOL", "FORTRAN"]})
+
     end
+  end
 
-    class NestedParam < T::Struct
-      const :users, T::Array[User]
-      const :params, T.nilable(NestedParam)
+  describe "#alan_kay_is_known_for" do
+    it "operates on the programmer_hash and returns the value of what Alan Kay is known for" do 
+      expect(alan_kay_is_known_for).to eq("Object Orientation")
+    end 
+  end
+
+  describe "#dennis_ritchies_language" do 
+    it "operates on the programmer_hash and returns the value of Dennis Ritchie's language as a string" do 
+      expect(dennis_ritchies_language).to eq("C")
     end
+  end
 
-    it 'works with nest T::Struct' do
-      converted = TypeCoerce[NestedParam].new.from({
-        users: [{id: '1'}],
-        params: {
-          users: [{id: '2', valid: 'true'}],
-          params: {
-            users: [{id: '3', valid: 'true'}],
-          },
-        },
-      })
-      # => <NestedParam
-      #   params=<NestedParam
-      #     params=<NestedParam
-      #       params=nil,
-      #       users=[<User id=3 valid=true>]
-      #     >,
-      #     users=[<User id=2 valid=true>]
-      #   >,
-      #   users=[<User id=1 valid=nil>]
-      # >
-
-      expect(converted.users.map(&:id)).to eql([1])
-      expect(converted.params.users.map(&:id)).to eql([2])
-      expect(converted.params.params.users.map(&:id)).to eql([3])
+  describe "#adding_matz" do 
+    it "operates on the programmer_hash and adds a key/value pair to the top level of the hash, returning the newly-added-to hash" do 
+      expect(adding_matz.keys).to include(:yukihiro_matsumoto)
     end
+  end
 
-    it 'works with nest T::Array' do
-      expect {
-        TypeError[T::Array[T.nilable(Integer)]].new.from(['1', 'invalid', '3'])
-      }.to raise_error(TypeCoerce::CoercionError)
-      expect(
-        TypeError[T::Array[T::Array[Integer]]].new.from([nil])
-      ).to eql([[]])
-      expect(
-        TypeError[T::Array[T::Array[Integer]]].new.from([['1'], ['2'], ['3']]),
-      ).to eql [[1], [2], [3]]
+  describe "#changing_alan" do 
+    it "operates on the programmer_hash and changes what Alan Kay is known for, returning the newly-changed hash" do 
+      expect(changing_alan[:alan_kay][:known_for]).to eq("GUI")
+    end
+  end
 
-      expect(TypeError[
-        T::Array[
-          T::Array[
-            T::Array[User]
-          ]
-        ]
-      ].new.from([[[{id: '1'}]]]).flatten.first.id).to eql(1)
-
-      expect(TypeError[
-        T::Array[
-          T::Array[
-            T::Array[
-              T::Array[
-                T::Array[User]
-              ]
-            ]
-          ]
-        ]
-      ].new.from([[[[[{id: 1}]]]]]).flatten.first.id).to eql 1
-
-      expect(TypeError[
-        T.nilable(T::Array[T.nilable(T::Array[T.nilable(User)])])
-      ].new.from([[{id: '1'}]]).flatten.map(&:id)).to eql([1])
+  describe "#adding_to_dennis" do 
+    it "operates on the programmer_hash and adds 'Assembly' to Dennis Ritchie's languages, returning the newly-added-to-hash" do 
+      expect(adding_to_dennis[:dennis_ritchie][:languages][1]).to include("Assembly")
     end
   end
 end
