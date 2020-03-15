@@ -1,7 +1,7 @@
 
 describe TypeError do
   context 'when given nested types' do
-    class User < T::Struct
+    class User < t::Struct
       const :id, Integer
       const :valid, T.nilable(T::Boolean)
     end
